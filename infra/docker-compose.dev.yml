@@ -1,0 +1,48 @@
+# Docker Compose — środowisko deweloperskie DokFormat
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: dokformat-postgres-dev
+    environment:
+      POSTGRES_USER: dokformat
+      POSTGRES_PASSWORD: dokformat
+      POSTGRES_DB: dokformat
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U dokformat']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: dokformat-backend-dev
+    command: sh -c "npx prisma db push && npm run start:dev"
+    environment:
+      DATABASE_URL: postgresql://dokformat:dokformat@postgres:5432/dokformat?schema=public
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-zmien-mnie}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-test-key}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      PORT: '3026'
+      E2E: ${E2E:-false}
+      LOCAL_UPLOAD_DIR: /app/uploads
+    ports:
+      - '3026:3026'
+    volumes:
+      - ../backend/src:/app/src
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_dev_data:
+  backend_uploads:

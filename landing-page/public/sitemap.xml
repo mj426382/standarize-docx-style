@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dokformat.pl/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://dokformat.pl/blog</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dokformat.pl/regulamin</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dokformat.pl/polityka-prywatnosci</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dokformat.pl/blog/spojne-formatowanie-dokumentow-word</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dokformat.pl/blog/test-ujednolicic-styl-dokumentu-word</loc>
+    <priority>0.6</priority>
+  </url>
+</urlset>

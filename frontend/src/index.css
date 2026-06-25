@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100 text-gray-900 antialiased;
+}
+
+/* Typografia podglądu dokumentu (kartka A4). */
+.document-prose h1 {
+  @apply text-3xl font-bold mt-0 mb-4;
+}
+.document-prose h2 {
+  @apply text-2xl font-semibold mt-6 mb-3;
+}
+.document-prose h3 {
+  @apply text-xl font-semibold mt-4 mb-2;
+}
+.document-prose p {
+  @apply my-3 leading-relaxed;
+}
+.document-prose ul {
+  @apply list-disc pl-6 my-3;
+}
+.document-prose ol {
+  @apply list-decimal pl-6 my-3;
+}
+.document-prose table {
+  @apply w-full table-fixed border-collapse my-4 text-sm;
+}
+.document-prose th,
+.document-prose td {
+  @apply border border-gray-300 px-3 py-2 text-left align-top break-words;
+}
+.document-prose thead th {
+  @apply bg-gray-100 font-semibold;
+}
+/* Pierwszy wiersz jako nagłówek, gdy dokument nie ma <thead> (np. tabele z mammoth/.docx). */
+.document-prose table:not(:has(thead)) tr:first-child > td {
+  @apply bg-gray-100 font-semibold;
+}
+/* Zwarta treść wewnątrz komórek - bez marginesów akapitów i list dziedziczonych z prozy. */
+.document-prose td > p,
+.document-prose th > p {
+  @apply my-0;
+}
+.document-prose td ul,
+.document-prose td ol,
+.document-prose th ul,
+.document-prose th ol {
+  @apply my-0 pl-5;
+}
+.document-prose td li,
+.document-prose th li {
+  @apply my-0;
+}
+
+/* Edytor TipTap */
+.ProseMirror {
+  @apply min-h-[400px] outline-none;
+}
+.ProseMirror table {
+  @apply border-collapse w-full my-4 text-sm;
+}
+.ProseMirror td,
+.ProseMirror th {
+  @apply border border-gray-300 px-3 py-2 align-top;
+}
+.ProseMirror td > p,
+.ProseMirror th > p {
+  @apply my-0;
+}

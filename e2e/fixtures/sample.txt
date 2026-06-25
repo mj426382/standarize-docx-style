@@ -1,0 +1,12 @@
+Raport miesięczny — przykładowy dokument
+
+Wprowadzenie
+W tym dokumencie przedstawiamy przykładową treść do formatowania. Tekst zawiera kilka akapitów oraz wyliczenia, które powinny zostać przekształcone w spójną strukturę.
+
+Główne punkty
+- Pierwszy punkt listy.
+- Drugi punkt listy.
+- Trzeci punkt listy.
+
+Podsumowanie
+Na zakończenie zbieramy najważniejsze wnioski z dokumentu w jednym, zwięzłym akapicie.

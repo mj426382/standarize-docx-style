@@ -1,0 +1,28 @@
+# Zależności
+node_modules/
+
+# Buildy
+dist/
+build/
+coverage/
+
+# Środowisko
+.env
+*.local
+
+# Uploady
+backend/uploads/
+
+# Logi
+*.log
+npm-debug.log*
+
+# Playwright
+e2e/test-results/
+e2e/playwright-report/
+e2e/fixtures/sample.docx
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/

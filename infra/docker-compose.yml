@@ -1,0 +1,51 @@
+# Docker Compose — środowisko produkcyjne DokFormat
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: dokformat-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: dokformat-backend
+    command: sh -c "npx prisma migrate deploy && node dist/main"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      B2_ENDPOINT: ${B2_ENDPOINT}
+      B2_BUCKET_NAME: ${B2_BUCKET_NAME}
+      B2_KEY_ID: ${B2_KEY_ID}
+      B2_APPLICATION_KEY: ${B2_APPLICATION_KEY}
+      B2_REGION: ${B2_REGION}
+      B2_PUBLIC_URL: ${B2_PUBLIC_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      PORT: '3026'
+    ports:
+      - '3026:3026'
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  backend_uploads:

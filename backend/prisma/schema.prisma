@@ -1,0 +1,77 @@
+// Prisma schema dla DokFormat
+// Generator klienta + datasource PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Użytkownik aplikacji. Hasło opcjonalne (logowanie Google bez hasła).
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String?
+  name      String?
+  googleId  String?    @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  documents Document[]
+
+  @@map("users")
+}
+
+/// Dokument utworzony przez użytkownika (z wklejki, .txt lub .docx).
+model Document {
+  id         String            @id @default(cuid())
+  userId     String
+  title      String
+  sourceType DocumentSource
+  sourceUrl  String? // klucz w storage dla wgranego pliku źródłowego
+  status     DocumentStatus    @default(PENDING)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions   DocumentVersion[]
+
+  @@index([userId])
+  @@map("documents")
+}
+
+/// Pojedyncza wersja dokumentu - przechowuje sformatowany HTML oraz klucz do .docx.
+model DocumentVersion {
+  id          String        @id @default(cuid())
+  documentId  String
+  versionNo   Int
+  html        String // sformatowana treść
+  docxUrl     String? // klucz w storage do gotowego .docx
+  origin      VersionOrigin
+  instruction String? // polecenie użytkownika przy AI_EDIT
+  createdAt   DateTime      @default(now())
+  document    Document      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, versionNo])
+  @@map("document_versions")
+}
+
+enum DocumentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum DocumentSource {
+  PASTE
+  TXT
+  DOCX
+}
+
+enum VersionOrigin {
+  AI_FORMAT
+  AI_EDIT
+  MANUAL
+}
